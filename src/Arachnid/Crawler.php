@@ -160,9 +160,6 @@ class Crawler
      */
     protected function traverseSingle($url, $depth)
     {
-        if ($depth<1) {
-            return;
-        }
         $hash = $this->getPathFromUrl($url);
         
         if (isset($this->links[$hash]['dont_visit']) &&
@@ -204,7 +201,9 @@ class Crawler
                     }
 
                     $this->links[$hash]['visited'] = true;
-                    $this->traverseChildren($hash, $childLinks, $depth);
+                    if ($depth>0) {
+                        $this->traverseChildren($hash, $childLinks, $depth);
+                    }
                 }
             }
         } catch (CurlException $e) {
